@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 01 — Re-platforming WooCommerce → Shopify | Sravani Guntupalli</title>
+<meta name="description" content="Deep-dive case study: a 6-month WooCommerce-to-Shopify migration delivering +33% revenue, 63.7% faster loads, and ~$10,600/mo in recovered cost.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F5F7F5; --surface:#FFFFFF; --ink:#16201E; --ink-soft:#4A5854;
+    --ink-faint:#8A968F; --accent:#1F7A68; --accent-deep:#155A4D; --accent-wash:#E6F1ED;
+    --before:#B26B3E; --before-wash:#F4ECE4; --hair:#DCE2DD;
+    --display:'Space Grotesk',sans-serif; --body:'Inter',sans-serif; --mono:'Space Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 28px;}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(245,247,245,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair);}
+  .nav-in{max-width:900px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;}
+  .mono-mark{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.04em;}
+  .mono-mark .dot{color:var(--accent);}
+  .back{font-family:var(--mono);font-size:12px;color:var(--ink-soft);transition:color .2s;}
+  .back:hover{color:var(--accent);}
+
+  .case-head{padding:64px 0 8px;}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;}
+  .case-head h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,5.5vw,52px);line-height:1.05;letter-spacing:-.02em;max-width:18ch;}
+  .meta{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-top:24px;display:flex;flex-wrap:wrap;gap:6px 22px;}
+  .meta b{color:var(--ink);}
+  .lede{font-size:18px;color:var(--ink-soft);margin-top:24px;max-width:64ch;}
+  .lede b{color:var(--ink);font-weight:600;}
+
+  section{padding:50px 0;}
+  section.ruled{border-top:1px solid var(--hair);}
+  .sec-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px;}
+  .sec-title{font-family:var(--display);font-weight:600;font-size:clamp(22px,3.4vw,30px);letter-spacing:-.01em;line-height:1.12;}
+  .prose{font-size:16px;color:var(--ink-soft);margin-top:18px;max-width:66ch;}
+  .prose b{color:var(--ink);font-weight:600;}
+  .prose + .prose{margin-top:14px;}
+
+  /* Migration diagram */
+  .diagram{padding:30px;background:linear-gradient(180deg,#FAFBFA,var(--surface));border:1px solid var(--hair);border-radius:12px;margin-top:24px;}
+  .diagram-label{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:22px;}
+  .flow{display:flex;align-items:stretch;gap:18px;}
+  .platform{flex:0 0 150px;border:1px solid var(--hair);border-radius:8px;padding:18px 14px;display:flex;flex-direction:column;justify-content:center;text-align:center;background:var(--surface);}
+  .platform.from{border-color:#E6D3C2;background:var(--before-wash);}
+  .platform.to{border-color:#BFE0D6;background:var(--accent-wash);}
+  .platform .tag{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
+  .platform.from .tag{color:var(--before);}
+  .platform.to .tag{color:var(--accent);}
+  .platform .name{font-family:var(--display);font-weight:600;font-size:18px;}
+  .payload{flex:1;display:flex;flex-direction:column;justify-content:center;position:relative;padding:4px 8px;}
+  .payload::before{content:"";position:absolute;left:-9px;right:-9px;top:50%;height:2px;background:repeating-linear-gradient(90deg,var(--hair) 0 7px,transparent 7px 13px);z-index:0;}
+  .payload-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .chip{background:var(--surface);border:1px solid var(--hair);border-radius:6px;padding:9px 10px;text-align:center;}
+  .chip .n{font-family:var(--mono);font-weight:700;font-size:15px;display:block;}
+  .chip .l{font-size:11px;color:var(--ink-soft);margin-top:2px;}
+
+  /* Metric grid */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden;margin-top:24px;}
+  .cell{background:var(--surface);padding:18px;}
+  .cell .k{font-size:12px;color:var(--ink-soft);margin-bottom:10px;}
+  .ba{display:flex;align-items:baseline;gap:7px;font-family:var(--mono);}
+  .ba .b{font-size:14px;color:var(--before);text-decoration:line-through;opacity:.85;}
+  .ba .ar{color:var(--ink-faint);font-size:12px;}
+  .ba .a{font-size:21px;font-weight:700;}
+  .delta{display:inline-block;margin-top:10px;font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-wash);padding:2px 9px;border-radius:20px;}
+
+  /* Phases */
+  .phases{margin-top:26px;display:flex;flex-direction:column;gap:14px;}
+  .phase{display:flex;gap:18px;background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:18px 20px;}
+  .phase .num{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--accent);background:var(--accent-wash);width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .phase h4{font-family:var(--display);font-weight:600;font-size:15.5px;}
+  .phase p{font-size:13.5px;color:var(--ink-soft);margin-top:4px;}
+
+  /* Analysis callout (the math) */
+  .calc{background:var(--ink);color:#DCE7E3;border-radius:12px;padding:28px 30px;margin-top:24px;font-family:var(--mono);}
+  .calc .title{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#7FB3A6;margin-bottom:16px;}
+  .calc .line{font-size:14px;line-height:1.9;}
+  .calc .line .res{color:#fff;font-weight:700;}
+  .calc .total{margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.15);font-size:15px;color:#fff;font-weight:700;}
+
+  .impact{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;}
+  .pill{font-family:var(--mono);font-size:13px;background:var(--accent-wash);border:1px solid #BFE0D6;border-radius:8px;padding:10px 14px;}
+  .pill b{color:var(--accent);font-weight:700;}
+
+  .takeaways{list-style:none;margin-top:18px;}
+  .takeaways li{font-size:15px;color:var(--ink-soft);padding-left:22px;position:relative;margin-bottom:11px;max-width:66ch;}
+  .takeaways li::before{content:"→";position:absolute;left:0;color:var(--accent);font-family:var(--mono);}
+  .takeaways b{color:var(--ink);font-weight:600;}
+
+  .next{border-top:1px solid var(--hair);padding:40px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+  .next a{font-family:var(--mono);font-size:13px;color:var(--accent);}
+  .next a:hover{text-decoration:underline;}
+
+  footer{border-top:1px solid var(--hair);padding:26px 0;}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);}
+
+  @media (max-width:680px){
+    .wrap,.nav-in{padding-left:20px;padding-right:20px;}
+    .grid{grid-template-columns:1fr 1fr;}
+    .flow{flex-direction:column;gap:14px;}
+    .platform{flex:none;}
+    .payload::before{left:50%;right:auto;top:-7px;bottom:-7px;width:2px;height:auto;background:repeating-linear-gradient(180deg,var(--hair) 0 7px,transparent 7px 13px);}
+  }
+</style>
+</head>
+<body>
+  <nav>
+    <div class="nav-in">
+      <a href="index.html" class="mono-mark">SG<span class="dot">.</span></a>
+      <a href="index.html#cases" class="back">← All case studies</a>
+    </div>
+  </nav>
+
+  <header class="case-head">
+    <div class="wrap">
+      <div class="eyebrow">Case 01 · E-Commerce Operations</div>
+      <h1>Re-platforming a storefront without losing a sale</h1>
+      <div class="meta">
+        <span><b>Role:</b> Project Lead</span>
+        <span><b>Company:</b> Electric Bike Company</span>
+        <span><b>Timeline:</b> 6 months · ahead of deadline</span>
+      </div>
+      <p class="lede">A full migration from <b>WooCommerce to Shopify</b> — moving the entire catalog, customer base, and order history while the store kept selling. The goal wasn't a redesign; it was a faster, cheaper, more scalable operation that the numbers could prove.</p>
+    </div>
+  </header>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Context</div>
+      <h2 class="sec-title">The challenge</h2>
+      <p class="prose">The existing WooCommerce storefront had become the bottleneck. Pages loaded in <b>5.8 seconds</b>, <b>72% of carts</b> were abandoned, and order fulfillment and inventory were handled through manual, error-prone steps. The platform couldn't keep pace with growth, and it definitely couldn't support the planned international expansion.</p>
+      <p class="prose">The constraint that shaped everything: this is a live, revenue-generating store. The migration had to happen <b>without dropping a single live sale</b> — no data loss across the catalog, customers, or order history, and no broken checkout during cutover.</p>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Scope</div>
+      <h2 class="sec-title">What moved</h2>
+      <div class="diagram">
+        <div class="diagram-label">Migration payload</div>
+        <div class="flow">
+          <div class="platform from"><div class="tag">From</div><div class="name">WooCommerce</div></div>
+          <div class="payload">
+            <div class="payload-inner">
+              <div class="chip"><span class="n">520</span><span class="l">SKUs & variants</span></div>
+              <div class="chip"><span class="n">18,400</span><span class="l">customer records</span></div>
+              <div class="chip"><span class="n">26,000</span><span class="l">historical orders</span></div>
+              <div class="chip"><span class="n">14</span><span class="l">third-party apps</span></div>
+            </div>
+          </div>
+          <div class="platform to"><div class="tag">To</div><div class="name">Shopify</div></div>
+        </div>
+      </div>
+      <p class="prose">Beyond the data, scope covered rebuilding backend workflows (inventory sync, fulfillment, customer service), re-integrating 14 payment, warranty, and CRM apps, and redesigning the UI/UX around a cleaner checkout journey.</p>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Approach</div>
+      <h2 class="sec-title">How I ran it</h2>
+      <p class="prose">I phased the work so risk stayed low and the live store was never exposed. Each phase had a clear exit before the next began.</p>
+      <div class="phases">
+        <div class="phase"><div class="num">1</div><div><h4>Audit & clean</h4><p>Inventoried 520 SKUs and 18.4K customer records, deduplicated and standardized data before anything moved — migration quality is set here, not at cutover.</p></div></div>
+        <div class="phase"><div class="num">2</div><div><h4>Rebuild & integrate</h4><p>Built Shopify backend workflows for inventory sync, fulfillment, and service, then re-integrated 14 third-party apps so no capability was lost in the move.</p></div></div>
+        <div class="phase"><div class="num">3</div><div><h4>Redesign the journey</h4><p>Reworked UI/UX to attack the 72% abandonment rate directly — fewer steps, faster pages, clearer path to checkout.</p></div></div>
+        <div class="phase"><div class="num">4</div><div><h4>Validate & cut over</h4><p>Measured every KPI against the WooCommerce baseline before go-live, then trained marketing, support, and operations on the new system.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Results</div>
+      <h2 class="sec-title">Before → after</h2>
+      <div class="grid">
+        <div class="cell"><div class="k">Page load time</div><div class="ba"><span class="b">5.8s</span><span class="ar">→</span><span class="a">2.1s</span></div><span class="delta">63.7% faster</span></div>
+        <div class="cell"><div class="k">Mobile score (Lighthouse)</div><div class="ba"><span class="b">62</span><span class="ar">→</span><span class="a">94</span></div><span class="delta">+51.6%</span></div>
+        <div class="cell"><div class="k">Monthly online sales</div><div class="ba"><span class="b">$148K</span><span class="ar">→</span><span class="a">$196.5K</span></div><span class="delta">+33%</span></div>
+        <div class="cell"><div class="k">Conversion rate</div><div class="ba"><span class="b">1.8%</span><span class="ar">→</span><span class="a">2.9%</span></div><span class="delta">+61.1%</span></div>
+        <div class="cell"><div class="k">Cart abandonment</div><div class="ba"><span class="b">72%</span><span class="ar">→</span><span class="a">54%</span></div><span class="delta">25% lower</span></div>
+        <div class="cell"><div class="k">Order processing</div><div class="ba"><span class="b">11min</span><span class="ar">→</span><span class="a">6min</span></div><span class="delta">5 min/order</span></div>
+        <div class="cell"><div class="k">Inventory accuracy</div><div class="ba"><span class="b">93%</span><span class="ar">→</span><span class="a">99.2%</span></div><span class="delta">+6.2 pts</span></div>
+        <div class="cell"><div class="k">Labor recovered</div><div class="ba"><span class="a">$4,400</span><span class="ar">/mo</span></div><span class="delta">automation</span></div>
+        <div class="cell"><div class="k">Stockout loss recovered</div><div class="ba"><span class="a">$6,200</span><span class="ar">/mo</span></div><span class="delta">sync accuracy</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">The analysis</div>
+      <h2 class="sec-title">Where the savings actually came from</h2>
+      <p class="prose">Headline percentages are easy to wave around. Here's the operational math that makes the cost savings real — the part I care about most as an operations lead.</p>
+      <div class="calc">
+        <div class="title">Labor saved from faster order processing</div>
+        <div class="line">5 min saved/order × 2,400 orders/mo = <span class="res">12,000 min/mo</span></div>
+        <div class="line">12,000 min ÷ 60 = <span class="res">200 labor hours/mo</span></div>
+        <div class="line">200 hrs × $22/hr = <span class="res">$4,400/mo</span></div>
+        <div class="total">+ Stockout revenue recovered from 99.2% inventory accuracy = $6,200/mo</div>
+        <div class="total" style="border:none;padding-top:6px;">≈ $10,600/mo recovered · ~$127K annualized</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Impact</div>
+      <h2 class="sec-title">Outcome</h2>
+      <div class="impact">
+        <div class="pill"><b>+33%</b> revenue ($148K → $196.5K/mo)</div>
+        <div class="pill"><b>63.7%</b> faster page loads</div>
+        <div class="pill"><b>~$10,600/mo</b> recovered</div>
+        <div class="pill"><b>Ahead of deadline</b>, all goals met</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Reflection</div>
+      <h2 class="sec-title">What I'd carry forward</h2>
+      <ul class="takeaways">
+        <li><b>Data hygiene before cutover is the whole game.</b> The clean-up phase felt slow, but it's why 26K orders and 18.4K customers migrated without corruption.</li>
+        <li><b>Tie every technical change to an operational number.</b> "Faster site" doesn't land with leadership; "$4,400/month in recovered labor" does.</li>
+        <li><b>Train the humans, not just the system.</b> Adoption across marketing, support, and ops is what made the new platform stick after go-live.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="next">
+      <a href="index.html#cases">← Back to all case studies</a>
+      <a href="case-operations.html">Next: Consolidating four departments →</a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap foot-in">
+      <span>© 2026 Sravani Guntupalli</span>
+      <span>sravani.guntupalli09@gmail.com</span>
+    </div>
+  </footer>
+</body>
+</html>

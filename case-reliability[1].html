@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case 03 — Reliability & Cost for Enterprise Clients | Sravani Guntupalli</title>
+<meta name="description" content="Case study: running infrastructure projects for global enterprise clients with 99.98% uptime and 15% annual cost savings through disciplined RAID tracking and vendor negotiation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#F5F7F5;--surface:#FFFFFF;--ink:#16201E;--ink-soft:#4A5854;--ink-faint:#8A968F;--accent:#1F7A68;--accent-deep:#155A4D;--accent-wash:#E6F1ED;--before:#B26B3E;--before-wash:#F4ECE4;--hair:#DCE2DD;--display:'Space Grotesk',sans-serif;--body:'Inter',sans-serif;--mono:'Space Mono',monospace;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:900px;margin:0 auto;padding:0 28px;}
+  nav{position:sticky;top:0;z-index:50;background:rgba(245,247,245,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--hair);}
+  .nav-in{max-width:900px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;}
+  .mono-mark{font-family:var(--mono);font-weight:700;font-size:15px;letter-spacing:.04em;}
+  .mono-mark .dot{color:var(--accent);}
+  .back{font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
+  .back:hover{color:var(--accent);}
+  .case-head{padding:64px 0 8px;}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;}
+  .case-head h1{font-family:var(--display);font-weight:700;font-size:clamp(32px,5.5vw,52px);line-height:1.05;letter-spacing:-.02em;max-width:18ch;}
+  .meta{font-family:var(--mono);font-size:12px;color:var(--ink-soft);margin-top:24px;display:flex;flex-wrap:wrap;gap:6px 22px;}
+  .meta b{color:var(--ink);}
+  .lede{font-size:18px;color:var(--ink-soft);margin-top:24px;max-width:64ch;}
+  .lede b{color:var(--ink);font-weight:600;}
+  section{padding:50px 0;}
+  section.ruled{border-top:1px solid var(--hair);}
+  .sec-eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px;}
+  .sec-title{font-family:var(--display);font-weight:600;font-size:clamp(22px,3.4vw,30px);letter-spacing:-.01em;line-height:1.12;}
+  .prose{font-size:16px;color:var(--ink-soft);margin-top:18px;max-width:66ch;}
+  .prose b{color:var(--ink);font-weight:600;}
+  .prose + .prose{margin-top:14px;}
+  .metric-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:10px;overflow:hidden;margin-top:24px;}
+  .ms{background:var(--surface);padding:20px 18px;}
+  .ms .n{font-family:var(--mono);font-weight:700;font-size:26px;color:var(--accent);}
+  .ms .l{font-size:12.5px;color:var(--ink-soft);margin-top:6px;}
+  .doing{list-style:none;margin-top:18px;}
+  .doing li{font-size:15px;color:var(--ink-soft);padding-left:22px;position:relative;margin-bottom:11px;max-width:66ch;}
+  .doing li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .doing b{color:var(--ink);font-weight:600;}
+  .clients{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;}
+  .client{font-family:var(--mono);font-size:13px;background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:12px 18px;}
+  .client b{color:var(--accent);}
+  .takeaways{list-style:none;margin-top:18px;}
+  .takeaways li{font-size:15px;color:var(--ink-soft);padding-left:22px;position:relative;margin-bottom:11px;max-width:66ch;}
+  .takeaways li::before{content:"→";position:absolute;left:0;color:var(--accent);font-family:var(--mono);}
+  .takeaways b{color:var(--ink);font-weight:600;}
+  .next{border-top:1px solid var(--hair);padding:40px 0;display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+  .next a{font-family:var(--mono);font-size:13px;color:var(--accent);}
+  .next a:hover{text-decoration:underline;}
+  footer{border-top:1px solid var(--hair);padding:26px 0;}
+  .foot-in{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);}
+  @media (max-width:680px){.wrap,.nav-in{padding-left:20px;padding-right:20px;}.metric-strip{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+  <nav><div class="nav-in"><a href="index.html" class="mono-mark">SG<span class="dot">.</span></a><a href="index.html#cases" class="back">← All case studies</a></div></nav>
+
+  <header class="case-head">
+    <div class="wrap">
+      <div class="eyebrow">Case 03 · Enterprise IT</div>
+      <h1>Holding the line on reliability and cost</h1>
+      <div class="meta">
+        <span><b>Role:</b> IT Project Coordinator</span>
+        <span><b>Company:</b> IBM & Kyndryl</span>
+        <span><b>Clients:</b> Global enterprise (aerospace, financial services)</span>
+      </div>
+      <p class="lede">Infrastructure projects for global enterprise clients leave no room for surprises. Run on disciplined <b>RAID tracking and tight vendor negotiation</b>, these environments held <b>99.98% uptime</b> while procurement costs came down.</p>
+    </div>
+  </header>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Context</div>
+      <h2 class="sec-title">The challenge</h2>
+      <p class="prose">Enterprise clients (Bombardier, Hartford) required high-availability infrastructure under strict SLAs — uptime wasn't a target, it was a contractual obligation. At the same time, leadership wanted procurement costs reduced without any drop in service quality. Two pressures that usually pull against each other.</p>
+      <div class="clients">
+        <div class="client"><b>Bombardier</b> · aerospace</div>
+        <div class="client"><b>Hartford</b> · financial services</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Approach</div>
+      <h2 class="sec-title">How I ran it</h2>
+      <p class="prose">Reliability came from disciplined risk and issue management; savings came from proactive vendor work. I kept both moving in parallel with tight cross-team follow-through so nothing slipped between functions.</p>
+      <ul class="doing">
+        <li>Tracked milestones and managed <b>RAID logs</b> across all client environments to keep risks visible and owned</li>
+        <li>Facilitated cross-functional meetings, maintained action-item logs, and <b>drove issues to closure</b> to protect SLAs</li>
+        <li>Negotiated vendor contracts and IT procurement, expanding B2B relationships while cutting cost</li>
+        <li>Mentored new hires across 5 cross-functional teams to keep delivery capacity stable</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Results</div>
+      <h2 class="sec-title">Outcome</h2>
+      <div class="metric-strip">
+        <div class="ms"><div class="n">99.98%</div><div class="l">system uptime across all environments</div></div>
+        <div class="ms"><div class="n">15%</div><div class="l">annual cost savings, exceeding ROI targets</div></div>
+        <div class="ms"><div class="n">−18%</div><div class="l">team turnover through structured engagement</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="sec-eyebrow">Reflection</div>
+      <h2 class="sec-title">What I'd carry forward</h2>
+      <ul class="takeaways">
+        <li><b>A RAID log only works if issues actually close.</b> The discipline was in the follow-through, not the tracking.</li>
+        <li><b>Cost and reliability aren't a trade-off if you negotiate well.</b> Better vendor terms funded stability rather than competing with it.</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="wrap"><div class="next"><a href="case-operations.html">← Previous: Consolidating four departments</a><a href="index.html#cases">All case studies →</a></div></div>
+  <footer><div class="wrap foot-in"><span>© 2026 Sravani Guntupalli</span><span>sravani.guntupalli09@gmail.com</span></div></footer>
+</body>
+</html>
